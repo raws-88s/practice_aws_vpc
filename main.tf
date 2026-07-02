@@ -20,7 +20,7 @@ resource "aws_subnet" "main" {
   map_public_ip_on_launch = true
 
   tags = merge (
-    var.public_subnet_tags
+    var.public_subnet_tags,
     local.common_tags,
     {
         #roboshop-dev-public

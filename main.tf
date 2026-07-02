@@ -12,10 +12,11 @@ resource "aws_internet_gateway" "main" {
   tags = local.igw_final_tags
 }
 
-/* resource "aws_subnet" "main" {
+resource "aws_subnet" "main" {
   count = length(var.public_subnet_cidrs)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.public_subnet_cidrs[count.index]
+  availability_zone = local.az_zones[count.index]
   map_public_ip_on_launch = true
 
   tags = merge (
@@ -23,9 +24,9 @@ resource "aws_internet_gateway" "main" {
     local.common_tags,
     {
         #roboshop-dev-public
-        Name = 
+        Name = "${var.project}-${var.environment}-public-${local.az_zones[count.index]}"
     }
 
   )
 
-} */
+}

@@ -12,7 +12,7 @@ resource "aws_internet_gateway" "main" {
   tags = local.igw_final_tags
 }
 
-resource "aws_subnet" "main" {
+resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.public_subnet_cidrs[count.index]
@@ -29,4 +29,32 @@ resource "aws_subnet" "main" {
 
   )
 
+}
+
+resource "aws_subnet" "private" {
+  count = length(var.p)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.private_subnet_cidrs[count.index]
+  availability_zone = local.availability_zone[count.index]
+
+  tags = merge(
+    var.private_subnet_tags,
+    {
+      Name = "${var.project}-${var.environment}-private-${local.availability_zone[count.index]}"
+    }
+  )
+}
+
+resource "aws_subnet" "database" {
+  count = length(var.private_subnet_cidrs)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.private_subnet_cidrs
+
+  tags = merge(
+    var.database_subnet_tags,
+    local.common_tags,
+  {
+    Name = "${var.project}-${var.environment}-database-${local.availability_zone[count.index]}"
+  }
+  )
 }

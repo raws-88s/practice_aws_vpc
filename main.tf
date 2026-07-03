@@ -40,7 +40,7 @@ resource "aws_subnet" "private" {
   tags = merge(
     var.private_subnet_tags,
     {
-      Name = "${var.project}-${var.environment}-private-${local.availability_zone[count.index]}"
+      Name = "${var.project}-${var.environment}-private-${local.az_zones[count.index]}"
     }
   )
 }
@@ -55,7 +55,7 @@ resource "aws_subnet" "database" {
     var.database_subnet_tags,
     local.common_tags,
   {
-    Name = "${var.project}-${var.environment}-database-${local.availability_zone[count.index]}"
+    Name = "${var.project}-${var.environment}-database-${local.az_zones[count.index]}"
   }
   )
 }
